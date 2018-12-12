@@ -1,25 +1,50 @@
 # 02_create_schema.py
 import sqlite3
-
-
+conn = sqlite3.connect('clientes.db')
+cursor = conn.cursor()
 def criarBD():
   # conectando...
-  conn = sqlite3.connect('clientes.db')
+
   # definindo um cursor
-  cursor = conn.cursor()
 
   # criando a tabela (schema)
-  try:
-    cursor.execute("""
-    CREATE TABLE clientes (
+  cursor.execute("""
+    CREATE TABLE IF NOT EXISTS clientes (
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            nome TEXT NOT NULL,
-            email TEXT NOT NULL,
-            matricula TEXT NOT NULL,
-            senha TEXT NOT NULL
+            nome VARCHAR NOT NULL,
+            email VARCHAR NOT NULL,
+            matricula VARCHAR NOT NULL,
+            senha VARCHAR NOT NULL
     );
+    
     """)
-  except:
-    pass
+
   # desconectando...
+  conn.commit()
   conn.close()
+
+def criar_disciplina():
+  cursor.execute('''CREATE TABLE IF NOT EXISTS disciplinas (
+            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            email_aluno VARCHAR NOT NULL,
+            nome VARCHAR NOT NULL,
+            FOREIGN KEY (email_aluno) REFERENCES clientes(email)
+    );''')
+  conn.commit()
+
+def criar_atividade():
+
+  cursor.execute('''
+    CREATE TABLE IF NOT EXISTS atividades (
+            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            email_aluno VARCHAR NOT NULL,
+            nome VARCHAR NOT NULL,
+            professor VARCHAR NOT NULL,
+            assunto TEXT NOT NULL,
+            FOREIGN KEY (email_aluno) REFERENCES clientes(email)
+    );''')
+  conn.commit()
+criar_disciplina()
+criar_atividade()
+
+

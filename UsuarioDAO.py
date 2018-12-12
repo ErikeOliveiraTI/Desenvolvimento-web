@@ -32,7 +32,7 @@ class UsuarioDAO():
         cursor.close()
         return row
 
-    def insertUsuario(self, usuario):
+    def insertUsuario(self, usuario: Usuario):
         cursor = self.connect()
         sql = """
           INSERT INTO clientes (nome, email, matricula, senha) 
@@ -56,8 +56,8 @@ class UsuarioDAO():
         cursor = self.connect()
         sql = """
         SELECT * FROM clientes WHERE email=?"""
-        values = (email)
+        values = (email,)
         cursor.execute(sql, values)
-        aluno = cursor.fecthone()
+        aluno = cursor.fetchone()
         aluno = Usuario(aluno[0], aluno[1], aluno[2], aluno[3])
         return aluno

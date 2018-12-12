@@ -1,5 +1,6 @@
 from atividade import Atividade
 
+import time
 
 class AtividadeDAO:
     def __init__(self, conn):
@@ -14,7 +15,7 @@ class AtividadeDAO:
         sql = """
           SELECT * FROM atividades WHERE email_aluno=?;
           """
-        values = (email_aluno)
+        values = (email_aluno,)
         cursor = self.connect()
         rows = cursor.execute(sql, values).fetchall()
         cursor.close()
@@ -23,7 +24,7 @@ class AtividadeDAO:
     def inserirAtividade(self, email_aluno, nome, professor, assunto):
         cursor = self.connect()
         sql = """
-                  INSERT INTO disciplinas (email_aluno, nome, professor, assunto) 
+                  INSERT INTO atividades (email_aluno, nome, professor, assunto) 
                   VALUES (?,?,?,?)
                   """
 
@@ -34,21 +35,21 @@ class AtividadeDAO:
         # Certificar que os dados foram persistidos.
         self.conn.commit()
 
-        print("Atividade inserida")
         return True
 
-    def deletarAtividade(self, nome):
+    def deletarAtividade(self, nome, email):
         cursor = self.connect()
         sql = """
-                          DELETE FROM atividades WHERE nome=?
+                          DELETE FROM atividades WHERE nome=? AND email_aluno=?
                           """
 
-        values = (nome)
+        values = (nome, email)
 
         cursor.execute(sql, values)
 
         # Certificar que os dados foram persistidos.
         self.conn.commit()
 
-        print("Atividade apagada")
+        print("Atividade apagada\n")
+        time.sleep(2)
         return True

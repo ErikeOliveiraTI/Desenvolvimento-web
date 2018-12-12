@@ -50,33 +50,29 @@ class Sistema:
 
     def cadastrarDisciplina(self, email_aluno, nome):
         self.disciplinaDAO.inserirDisciplina(email_aluno, nome)
-        print('Disciplina cadastrada')
-        self.menu()
+        print('Disciplina cadastrada\n')
 
     def visualizarDisciplinas(self, email_aluno):
         disciplinas = self.disciplinaDAO.getAll(email_aluno)
         print('Disciplinas\n'
               '')
         for disciplina in disciplinas:
-            print('Nome: ' + disciplina[1]+'\n'
+            print('Nome: ' + disciplina[2]+'\n'
                                            '')
-        self.menu()
 
     def adicionarAtividade(self, email_aluno, nome, professor, assunto):
         self.atividadeDAO.inserirAtividade(email_aluno, nome, professor, assunto)
         print('Atividade cadastrada')
-        self.menu()
 
     def visualizarAtividades(self, email_aluno):
         atividades = self.atividadeDAO.getAll(email_aluno)
         print('Atividades\n'
               '')
         for atividade in atividades:
-            print('Nome: ' + atividade[1])
             print('Nome: ' + atividade[2])
-            print('Nome: ' + atividade[3])
+            print('Professor: ' + atividade[3])
+            print('Assunto: ' + atividade[4])
             print('')
-        self.menu()
 
     def getpostit(self):
         return self.postit
@@ -107,12 +103,11 @@ class Sistema:
                 while len(senha) < 6:
                     senha = input("Digite a senha, deve conter no minimo 6 caracteres:")
             else:
-
-                usuario = UsuarioDAO(nome, email, matricula, senha)
-                print("ENTROU AQUI")
-                usuario.insertUsuario(usuario)
-                usuario.getAll()
-                self.cadastrar_usuario(usuario)
+                usuario = Usuario(nome,email,matricula,senha)
+                self.usuarioDAO.insertUsuario(usuario)
+                print("Usuario cadastrado com sucesso!\n")
+                time.sleep(1)
+                self.tela_inicial()
                 # usuario.login()
 
 
@@ -121,9 +116,10 @@ class Sistema:
             senha = input("Digite a senha:")
             logado = self.login(email,senha)
             if logado:
+                user = self.usuarioDAO.montar_aluno(email)
                 print("Usuario " + logado[1] + " logado!\n")
                 time.sleep(1)
-                self.menu()
+                self.menu(user)
             else:
                 print("Dados incorretos")
                 time.sleep(1)
@@ -155,11 +151,13 @@ class Sistema:
             opcao = input("Digite a opção:")
 
             if opcao == '1':
-                nome = input('Digite o nome da disciplina')
+                nome = input('Digite o nome da disciplina: ')
                 self.cadastrarDisciplina(user.email, nome)
 
             if opcao == '2':
-
+                nome = input("nome da atividade: ").upper()
+                professor = input("Qual o nome do professor: ")
+                assunto = input("Assunto: ")
                 self.adicionarAtividade(user.email, nome, professor, assunto)
 
             if opcao == '3':
@@ -168,7 +166,9 @@ class Sistema:
             if opcao == '4':
                 self.visualizarAtividades(user.email)
 
-            if opcao == '1':
+            if opcao == '5':
+                nome = input("qual atividade: ").upper()
+                self.atividadeDAO.deletarAtividade(nome, user.email)
                 pass
 
             '''if opçao == '1':

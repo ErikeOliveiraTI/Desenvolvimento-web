@@ -13,7 +13,7 @@ class DisciplinaDAO:
         sql = """
           SELECT * FROM disciplinas WHERE email_aluno=?;
           """
-        values = (email_aluno)
+        values = (email_aluno,)
         cursor = self.connect()
         rows = cursor.execute(sql, values).fetchall()
         cursor.close()
@@ -33,5 +33,5 @@ class DisciplinaDAO:
         # Certificar que os dados foram persistidos.
         self.conn.commit()
 
-        print("Disciplina inserida")
+
         return True
